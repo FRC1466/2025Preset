@@ -1,3 +1,6 @@
+// Copyright (c) 2025 FRC 1466
+// http://github.com/FRC1466
+
 package frc.robot.util;
 
 import com.pathplanner.lib.path.GoalEndState;

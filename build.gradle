@@ -108,7 +108,7 @@ test {
 // AdvantageKit log replay from the command line. Set the
 // value to "true" to enable the sim GUI by default (this
 // is the standard WPILib behavior).
-wpi.sim.addGui().defaultEnabled = false
+wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
@@ -129,6 +129,19 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+}
+
+// Check robot type when deploying
+task(checkConstantsDeploy, dependsOn: "classes", type: JavaExec) {
+    main = "org.littletonrobotics.frc2025.Constants\$CheckDeploy"
+    classpath = sourceSets.main.runtimeClasspath
+}
+deployroborio.dependsOn(checkConstantsDeploy)
+
+// Check constants for pull request
+task(checkConstantsPullRequest, dependsOn: "classes", type: JavaExec) {
+    main = "org.littletonrobotics.frc2025.Constants\$CheckPullRequest"
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 // Create version file
@@ -188,6 +201,7 @@ spotless {
         removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()
+        licenseHeader("// Copyright (c) 2025 FRC 1466\n// http://github.com/FRC1466\n\n")
     }
     groovyGradle {
         target fileTree(".") {

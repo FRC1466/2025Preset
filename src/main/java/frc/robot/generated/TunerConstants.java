@@ -1,3 +1,6 @@
+// Copyright (c) 2025 FRC 1466
+// http://github.com/FRC1466
+
 package frc.robot.generated;
 
 import static edu.wpi.first.units.Units.*;
