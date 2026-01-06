@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotType;
 import frc.robot.generated.TunerConstants;
+import frc.robot.lib.BLine.Path;
 import frc.robot.util.LoggedTracer;
 import frc.robot.util.NTClientLogger;
 import frc.robot.util.PhoenixUtil;
@@ -172,6 +173,17 @@ public class Robot extends LoggedRobot {
         .onCommandFinish((Command command) -> logCommandFunction.accept(command, false));
     CommandScheduler.getInstance()
         .onCommandInterrupt((Command command) -> logCommandFunction.accept(command, false));
+
+    // Set global constraints before creating any paths
+    Path.setDefaultGlobalConstraints(new Path.DefaultGlobalConstraints(
+      4.0,
+      3.0,
+      360.0,
+      720.0,
+      0.05,
+      2.0,
+      0.3
+    ));
 
     // Check for valid swerve config
     var modules =

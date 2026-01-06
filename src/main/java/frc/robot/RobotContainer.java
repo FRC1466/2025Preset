@@ -33,6 +33,8 @@ import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.MirrorUtil;
+import lombok.Getter;
+
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -46,8 +48,8 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
  */
 public class RobotContainer {
   // Subsystems
-  private Drive drive;
-  private Vision vision;
+  @Getter private Drive drive;
+  @Getter private Vision vision;
 
   private Command blankAuto = Commands.none();
 
