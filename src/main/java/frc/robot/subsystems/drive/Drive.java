@@ -17,7 +17,6 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,11 +39,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
-import frc.robot.lib.BLine.FollowPath;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import lombok.Getter;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -78,21 +75,6 @@ public class Drive extends SubsystemBase {
               TunerConstants.FrontLeft.SlipCurrent,
               1),
           getModuleTranslations());
-
-  // Create a reusable builder with your robot's configuration
-  @Getter
-  FollowPath.Builder pathBuilder =
-      new FollowPath.Builder(
-              this,
-              this::getPose,
-              this::getChassisSpeeds,
-              this::runVelocity,
-              new PIDController(5.0, 0.0, 0.0), // translation
-              new PIDController(3.0, 0.0, 0.0), // rotation
-              new PIDController(2.0, 0.0, 0.0) // cross-track
-              )
-          .withDefaultShouldFlip()
-          .withPoseReset(this::setPose);
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;

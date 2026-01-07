@@ -13,8 +13,8 @@ public final class Constants {
   private static RobotType robotType = RobotType.SIMBOT;
   public static final boolean tuningMode = true;
 
-  public static double fieldLength = 17.548;
-  public static double fieldWidth = 8.052;
+  public static double fieldLengthMeters = 17.548;
+  public static double fieldWidthMeters = 8.052;
 
   @SuppressWarnings("resource")
   public static RobotType getRobot() {

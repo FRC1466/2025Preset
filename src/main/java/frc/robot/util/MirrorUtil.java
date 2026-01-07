@@ -19,7 +19,7 @@ public class MirrorUtil {
     if (!mirror.getAsBoolean()) return pose;
     return new Pose2d(
         pose.getX(),
-        Constants.fieldWidth - pose.getY(),
+        Constants.fieldWidthMeters - pose.getY(),
         new Rotation2d(pose.getRotation().getCos(), -pose.getRotation().getSin()));
   }
 }

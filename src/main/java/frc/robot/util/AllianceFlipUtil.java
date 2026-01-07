@@ -10,11 +10,11 @@ import frc.robot.Constants;
 
 public class AllianceFlipUtil {
   public static double applyX(double x) {
-    return shouldFlip() ? Constants.fieldLength - x : x;
+    return shouldFlip() ? Constants.fieldLengthMeters - x : x;
   }
 
   public static double applyY(double y) {
-    return shouldFlip() ? Constants.fieldWidth - y : y;
+    return shouldFlip() ? Constants.fieldWidthMeters - y : y;
   }
 
   public static Rotation2d apply(Rotation2d rotation) {
