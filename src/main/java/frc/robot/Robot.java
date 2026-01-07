@@ -175,15 +175,8 @@ public class Robot extends LoggedRobot {
         .onCommandInterrupt((Command command) -> logCommandFunction.accept(command, false));
 
     // Set global constraints before creating any paths
-    Path.setDefaultGlobalConstraints(new Path.DefaultGlobalConstraints(
-      4.0,
-      3.0,
-      360.0,
-      720.0,
-      0.05,
-      2.0,
-      0.3
-    ));
+    Path.setDefaultGlobalConstraints(
+        new Path.DefaultGlobalConstraints(4.0, 3.0, 360.0, 720.0, 0.05, 2.0, 0.3));
 
     // Check for valid swerve config
     var modules =

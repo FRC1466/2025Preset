@@ -42,10 +42,9 @@ import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.lib.BLine.FollowPath;
 import frc.robot.util.LocalADStarAK;
-import lombok.Getter;
-
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import lombok.Getter;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -80,17 +79,20 @@ public class Drive extends SubsystemBase {
               1),
           getModuleTranslations());
 
-        // Create a reusable builder with your robot's configuration
-    @Getter FollowPath.Builder pathBuilder = new FollowPath.Builder(
-          this,
-          this::getPose,
-          this::getChassisSpeeds,
-          this::runVelocity,
-          new PIDController(5.0, 0.0, 0.0),  // translation
-          new PIDController(3.0, 0.0, 0.0),  // rotation
-          new PIDController(2.0, 0.0, 0.0)   // cross-track
-      ).withDefaultShouldFlip()
-      .withPoseReset(this::setPose);
+  // Create a reusable builder with your robot's configuration
+  @Getter
+  FollowPath.Builder pathBuilder =
+      new FollowPath.Builder(
+              this,
+              this::getPose,
+              this::getChassisSpeeds,
+              this::runVelocity,
+              new PIDController(5.0, 0.0, 0.0), // translation
+              new PIDController(3.0, 0.0, 0.0), // rotation
+              new PIDController(2.0, 0.0, 0.0) // cross-track
+              )
+          .withDefaultShouldFlip()
+          .withPoseReset(this::setPose);
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;

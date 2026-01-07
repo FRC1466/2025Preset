@@ -5,6 +5,8 @@ package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Alert;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.autos.DriveForward;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -32,11 +35,12 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.MirrorUtil;
-import lombok.Getter;
-
+import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import lombok.Getter;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
@@ -180,6 +184,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    LoggedTunableNumber P = new LoggedTunableNumber("Autos/P", 0);
+    LoggedTunableNumber D = new LoggedTunableNumber("Autos/D", 0);
+
     DoubleSupplier driverX = () -> -controller.getLeftY();
     DoubleSupplier driverY = () -> -controller.getLeftX();
     DoubleSupplier driverOmega = () -> -controller.getRightX();
@@ -187,6 +194,22 @@ public class RobotContainer {
     Supplier<Command> joystickDriveCommandFactory =
         () -> DriveCommands.joystickDrive(drive, driverX, driverY, driverOmega);
     drive.setDefaultCommand(joystickDriveCommandFactory.get());
+
+    controller
+        .a()
+        .whileTrue(
+            Commands.defer(
+                () -> new DriveForward(this, P::getAsDouble, D::getAsDouble).getCommand(),
+                Set.of(drive)));
+
+    controller.b().whileTrue(AutoBuilder.buildAuto("Example Auto"));
+
+    controller
+        .x()
+        .whileTrue(
+            AutoBuilder.pathfindToPoseFlipped(
+                new Pose2d(14.5, 5, new Rotation2d(2 * Math.PI)),
+                new PathConstraints(4, 3, 360.0, 720.0)));
 
     // Reset gyro
     var driverStartAndBack = controller.start().and(controller.back());
