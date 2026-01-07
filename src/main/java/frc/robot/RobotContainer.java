@@ -9,6 +9,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,6 +23,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveToPose;
+import frc.robot.commands.DriveToPoseFusion;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -189,14 +192,28 @@ public class RobotContainer {
         () -> DriveCommands.joystickDrive(drive, driverX, driverY, driverOmega);
     drive.setDefaultCommand(joystickDriveCommandFactory.get());
 
-    controller.b().whileTrue(AutoBuilder.buildAuto("Example Auto"));
-
     controller
         .a()
+        .whileTrue(
+            new DriveToPoseFusion(drive, () -> new Pose2d(), new PathConstraints(4, 3, 720, 360)));
+
+    controller
+        .b()
         .whileTrue(
             AutoBuilder.pathfindToPoseFlipped(
                 new Pose2d(14.5, 5, new Rotation2d(Math.PI)),
                 new PathConstraints(4, 3, 360.0, 720.0)));
+
+    controller
+        .x()
+        .whileTrue(new DriveToPose(drive, () -> new Pose2d(14.5, 5, new Rotation2d(Math.PI))));
+
+    controller
+        .y()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    drive.setPose(drive.getPose().plus(new Transform2d(1, 0, new Rotation2d())))));
 
     // Reset gyro
     var driverStartAndBack = controller.start().and(controller.back());
