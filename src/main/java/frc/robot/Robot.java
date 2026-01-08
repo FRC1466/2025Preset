@@ -7,6 +7,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.MathShared;
 import edu.wpi.first.math.MathSharedStore;
@@ -201,6 +202,8 @@ public class Robot extends LoggedRobot {
       DriverStationSim.setAllianceStationId(AllianceStationID.Blue1);
       DriverStationSim.notifyNewData();
     }
+
+    PathfindingCommand.warmupCommand().schedule();
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.

@@ -5,8 +5,6 @@ package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -23,8 +21,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.DriveToPose;
 import frc.robot.commands.DriveToPoseFusion;
+import frc.robot.commands.PathfindThenFollow;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -37,6 +35,7 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.GeneratePaths;
 import frc.robot.util.MirrorUtil;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -194,19 +193,9 @@ public class RobotContainer {
 
     controller
         .a()
-        .whileTrue(
-            new DriveToPoseFusion(drive, () -> new Pose2d(), new PathConstraints(4, 3, 720, 360)));
+        .whileTrue(new DriveToPoseFusion(drive, () -> new Pose2d(2, 4, new Rotation2d())));
 
-    controller
-        .b()
-        .whileTrue(
-            AutoBuilder.pathfindToPoseFlipped(
-                new Pose2d(14.5, 5, new Rotation2d(Math.PI)),
-                new PathConstraints(4, 3, 360.0, 720.0)));
-
-    controller
-        .x()
-        .whileTrue(new DriveToPose(drive, () -> new Pose2d(14.5, 5, new Rotation2d(Math.PI))));
+    controller.b().whileTrue(new PathfindThenFollow(drive, () -> GeneratePaths.getCirclePath()));
 
     controller
         .y()
