@@ -134,14 +134,14 @@ tasks.withType(JavaCompile) {
 
 // Check robot type when deploying
 task(checkConstantsDeploy, dependsOn: "classes", type: JavaExec) {
-    main = "org.littletonrobotics.frc2025.Constants\$CheckDeploy"
+    main = "frc.robot.Constants\$CheckDeploy"
     classpath = sourceSets.main.runtimeClasspath
 }
 deployroborio.dependsOn(checkConstantsDeploy)
 
 // Check constants for pull request
 task(checkConstantsPullRequest, dependsOn: "classes", type: JavaExec) {
-    main = "org.littletonrobotics.frc2025.Constants\$CheckPullRequest"
+    main = "frc.robot.Constants\$CheckPullRequest"
     classpath = sourceSets.main.runtimeClasspath
 }
 
